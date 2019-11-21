@@ -1,0 +1,8 @@
+<launch>
+  <!--Launch the cameras-->
+  <include file="$(find zero_point_cal)/launch/cam.launch"/>
+
+  <!-- the self made files -->
+  <node pkg="zero_point_cal" type="marker_detection" name="marker_detection" output="screen"></node>
+
+</launch>
