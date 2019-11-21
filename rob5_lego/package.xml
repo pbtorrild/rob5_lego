@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rob5_lego</name>
+  <version>0.0.0</version>
+  <description>The rob5_lego package</description>
+
+  <maintainer email="ptorri17@student.aau.dk">Peter Birk Torrild</maintainer>
+
+  <license>Free to use</license>
+
+  <author email="vkulda17@student.aau.dk">Violeta Kuldaite</author>
+  <author email="psaren17@student.aau.dk">Peter Tybjerg Sørensen</author>
+  <author email="fsleza17@student.aau.dk">Filip Slezak</author>
+  <author email="jbjerr17@student.aau.dk">Jasper Bjerregaard</author>
+  <author email="clfm17@student.aau.dk">Peter Birk Torrild</author>
+  <author email="ptorri17@student.aau.dk">Peter Birk Torrild</author>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!--Add the packages within-->
+ <exec_depend>lego_moveit_config</exec_depend>
+ <exec_depend>lego_robot_description</exec_depend>
+ <exec_depend>zero_point_cal</exec_depend>
+  <export>
+    <metapackage />
+  </export>
+</package>
