@@ -1,0 +1,11 @@
+<launch>
+  <!-- Bring up robot-->
+  <include file="$(find ur_bringup)/launch/ur5_bringup.launch">
+    <arg name="robot_ip" value="172.22.22.2"/>
+  </include>
+  <!--Launch the movit-->
+  <include file="$(find lego_moveit_config)/launch/demo.launch"/>
+  <!--Launch the cameras and detection-->
+  <include file="$(find zero_point_cal)/launch/all.launch"/>
+
+</launch>

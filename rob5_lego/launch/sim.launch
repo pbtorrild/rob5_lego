@@ -1,0 +1,7 @@
+<launch>
+  <!--Launch the movit-->
+  <include file="$(find lego_moveit_config)/launch/demo.launch"/>
+  <!--Launch the cameras and detection-->
+  <include file="$(find zero_point_cal)/launch/all.launch"/>
+
+</launch>
