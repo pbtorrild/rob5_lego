@@ -1,0 +1,6 @@
+<launch>
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find lego_robot_description)/urdf/lego_bot.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+
+</launch>
