@@ -9,97 +9,100 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
-    <group name="camera">
-        <link name="camera_bottom_screw_frame" />
-        <link name="camera_link" />
-        <link name="camera_depth_frame" />
-        <link name="camera_color_frame" />
-        <link name="camera_color_optical_frame" />
-        <link name="camera_depth_optical_frame" />
-        <link name="camera_left_ir_frame" />
-        <link name="camera_left_ir_optical_frame" />
-        <link name="camera_right_ir_frame" />
-        <link name="camera_right_ir_optical_frame" />
+    <group name="manipulator">
+        <chain base_link="base_link" tip_link="ee_link" />
     </group>
-    <group name="ur5">
-        <chain base_link="base_link" tip_link="tool0" />
-    </group>
-    <group name="gripper">
-        <link name="gripper_body" />
+    <group name="end_effector">
+        <joint name="ee_fixed_joint" />
+        <joint name="end_effector" />
+        <joint name="camera_joint" />
+        <joint name="camera_link_joint" />
+        <joint name="camera_depth_joint" />
+        <joint name="camera_color_joint" />
+        <joint name="camera_color_optical_joint" />
+        <joint name="camera_depth_optical_joint" />
+        <joint name="camera_left_ir_joint" />
+        <joint name="camera_left_ir_optical_joint" />
+        <joint name="camera_right_ir_joint" />
+        <joint name="camera_right_ir_optical_joint" />
+        <joint name="g_j1" />
+        <joint name="ee_j1" />
         <joint name="g_j2" />
         <joint name="ee_j2" />
         <joint name="gj1_2" />
         <joint name="gj2_2" />
-        <joint name="gripper_motor" />
-        <joint name="ee_j1" />
-        <group name="camera" />
     </group>
-    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
-    <group_state name="start_pos" group="ur5">
-        <joint name="elbow_joint" value="1.5707" />
-        <joint name="shoulder_lift_joint" value="-1.5707" />
-        <joint name="shoulder_pan_joint" value="-1.5707" />
-        <joint name="wrist_1_joint" value="0" />
-        <joint name="wrist_2_joint" value="0" />
-        <joint name="wrist_3_joint" value="0" />
-    </group_state>
+    <group name="other">
+        <joint name="world_joint" />
+        <joint name="table_mount_robot" />
+    </group>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="moveit_ee" parent_link="ee_link" group="end_effector" parent_group="manipulator" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
-    <virtual_joint name="world" type="fixed" parent_frame="world" child_link="world" />
+    <virtual_joint name="fixed_joint" type="fixed" parent_frame="base_link" child_link="world" />
+    <virtual_joint name="fix_ee" type="fixed" parent_frame="gripper_body" child_link="ee_link" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="g_j1" />
+    <passive_joint name="ee_j1" />
+    <passive_joint name="g_j2" />
+    <passive_joint name="ee_j2" />
+    <passive_joint name="gj1_2" />
+    <passive_joint name="gj2_2" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="shoulder_link" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="table" reason="Adjacent" />
+    <disable_collisions link1="camera_link" link2="ee1" reason="Never" />
+    <disable_collisions link1="camera_link" link2="ee2" reason="Never" />
     <disable_collisions link1="camera_link" link2="ee_link" reason="Never" />
+    <disable_collisions link1="camera_link" link2="g1" reason="Never" />
+    <disable_collisions link1="camera_link" link2="g1_2" reason="Never" />
+    <disable_collisions link1="camera_link" link2="g2" reason="Never" />
+    <disable_collisions link1="camera_link" link2="g2_2" reason="Never" />
     <disable_collisions link1="camera_link" link2="gripper_body" reason="Adjacent" />
-    <disable_collisions link1="camera_link" link2="gripper_hinge_1L" reason="Never" />
-    <disable_collisions link1="camera_link" link2="gripper_hinge_1R" reason="Never" />
-    <disable_collisions link1="camera_link" link2="gripper_hinge_2L" reason="Never" />
-    <disable_collisions link1="camera_link" link2="gripper_hinge_2R" reason="Never" />
-    <disable_collisions link1="camera_link" link2="gripper_motorL" reason="Never" />
-    <disable_collisions link1="camera_link" link2="gripper_motorR" reason="Never" />
     <disable_collisions link1="camera_link" link2="wrist_1_link" reason="Never" />
     <disable_collisions link1="camera_link" link2="wrist_2_link" reason="Never" />
     <disable_collisions link1="camera_link" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_body" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_hinge_1L" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_hinge_1R" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_hinge_2L" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_hinge_2R" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_motorL" reason="Never" />
-    <disable_collisions link1="ee_link" link2="gripper_motorR" reason="Never" />
+    <disable_collisions link1="ee1" link2="ee_link" reason="Never" />
+    <disable_collisions link1="ee1" link2="g1" reason="Adjacent" />
+    <disable_collisions link1="ee1" link2="g1_2" reason="Default" />
+    <disable_collisions link1="ee1" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="ee1" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="ee1" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="ee2" link2="ee_link" reason="Never" />
+    <disable_collisions link1="ee2" link2="g2" reason="Adjacent" />
+    <disable_collisions link1="ee2" link2="g2_2" reason="Default" />
+    <disable_collisions link1="ee2" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="ee2" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="ee2" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="ee_link" link2="g1" reason="Never" />
+    <disable_collisions link1="ee_link" link2="g1_2" reason="Never" />
+    <disable_collisions link1="ee_link" link2="g2" reason="Never" />
+    <disable_collisions link1="ee_link" link2="g2_2" reason="Never" />
+    <disable_collisions link1="ee_link" link2="gripper_body" reason="Adjacent" />
     <disable_collisions link1="ee_link" link2="wrist_1_link" reason="Never" />
     <disable_collisions link1="ee_link" link2="wrist_2_link" reason="Never" />
     <disable_collisions link1="ee_link" link2="wrist_3_link" reason="Adjacent" />
     <disable_collisions link1="forearm_link" link2="upper_arm_link" reason="Adjacent" />
     <disable_collisions link1="forearm_link" link2="wrist_1_link" reason="Adjacent" />
-    <disable_collisions link1="gripper_body" link2="gripper_hinge_1L" reason="Adjacent" />
-    <disable_collisions link1="gripper_body" link2="gripper_hinge_1R" reason="Adjacent" />
-    <disable_collisions link1="gripper_body" link2="gripper_motorL" reason="Adjacent" />
-    <disable_collisions link1="gripper_body" link2="gripper_motorR" reason="Adjacent" />
+    <disable_collisions link1="g1" link2="gripper_body" reason="Adjacent" />
+    <disable_collisions link1="g1" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="g1" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="g1" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="g1_2" link2="gripper_body" reason="Adjacent" />
+    <disable_collisions link1="g1_2" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="g1_2" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="g1_2" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="g2" link2="gripper_body" reason="Adjacent" />
+    <disable_collisions link1="g2" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="g2" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="g2" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="g2_2" link2="gripper_body" reason="Adjacent" />
+    <disable_collisions link1="g2_2" link2="wrist_1_link" reason="Never" />
+    <disable_collisions link1="g2_2" link2="wrist_2_link" reason="Never" />
+    <disable_collisions link1="g2_2" link2="wrist_3_link" reason="Never" />
     <disable_collisions link1="gripper_body" link2="wrist_1_link" reason="Never" />
     <disable_collisions link1="gripper_body" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_body" link2="wrist_3_link" reason="Adjacent" />
-    <disable_collisions link1="gripper_hinge_1L" link2="gripper_hinge_2L" reason="Default" />
-    <disable_collisions link1="gripper_hinge_1L" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_1L" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_1L" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_1R" link2="gripper_hinge_2R" reason="Default" />
-    <disable_collisions link1="gripper_hinge_1R" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_1R" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_1R" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2L" link2="gripper_motorL" reason="Adjacent" />
-    <disable_collisions link1="gripper_hinge_2L" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2L" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2L" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2R" link2="gripper_motorR" reason="Adjacent" />
-    <disable_collisions link1="gripper_hinge_2R" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2R" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_hinge_2R" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="gripper_motorL" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_motorL" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_motorL" link2="wrist_3_link" reason="Never" />
-    <disable_collisions link1="gripper_motorR" link2="wrist_1_link" reason="Never" />
-    <disable_collisions link1="gripper_motorR" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_motorR" link2="wrist_3_link" reason="Never" />
+    <disable_collisions link1="gripper_body" link2="wrist_3_link" reason="Default" />
     <disable_collisions link1="shoulder_link" link2="table" reason="Never" />
     <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent" />
     <disable_collisions link1="wrist_1_link" link2="wrist_2_link" reason="Adjacent" />

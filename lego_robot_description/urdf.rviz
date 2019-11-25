@@ -28,7 +28,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Camera
+    SyncSource: ""
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -71,6 +71,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        camera_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         camera_color_frame:
           Alpha: 1
           Show Axes: false
@@ -100,10 +104,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_mount:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         camera_right_ir_frame:
           Alpha: 1
           Show Axes: false
@@ -112,6 +112,16 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        ee1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ee2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         ee_link:
           Alpha: 1
           Show Axes: false
@@ -122,37 +132,27 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        g1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        g1_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        g2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        g2_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         gripper_body:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_hinge_1L:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_hinge_1R:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_hinge_2L:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_hinge_2R:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_motorL:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gripper_motorR:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -210,9 +210,7 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
-        camera_aligned_depth_to_color_frame:
-          Value: true
-        camera_aligned_depth_to_infra1_frame:
+        camera_bottom_screw_frame:
           Value: true
         camera_color_frame:
           Value: true
@@ -222,51 +220,33 @@ Visualization Manager:
           Value: true
         camera_depth_optical_frame:
           Value: true
-        camera_infra1_frame:
-          Value: true
-        camera_infra1_optical_frame:
-          Value: true
-        camera_infra2_frame:
-          Value: true
-        camera_infra2_optical_frame:
-          Value: true
         camera_left_ir_frame:
           Value: true
         camera_left_ir_optical_frame:
           Value: true
         camera_link:
           Value: true
-        camera_mount:
-          Value: true
         camera_right_ir_frame:
           Value: true
         camera_right_ir_optical_frame:
+          Value: true
+        ee1:
+          Value: true
+        ee2:
           Value: true
         ee_link:
           Value: true
         forearm_link:
           Value: true
+        g1:
+          Value: true
+        g1_2:
+          Value: true
+        g2:
+          Value: true
+        g2_2:
+          Value: true
         gripper_body:
-          Value: true
-        gripper_hinge_1L:
-          Value: true
-        gripper_hinge_1R:
-          Value: true
-        gripper_hinge_2L:
-          Value: true
-        gripper_hinge_2R:
-          Value: true
-        gripper_motorL:
-          Value: true
-        gripper_motorR:
-          Value: true
-        marker_0:
-          Value: true
-        marker_1:
-          Value: true
-        marker_6:
-          Value: true
-        marker_7:
           Value: true
         shoulder_link:
           Value: true
@@ -305,24 +285,12 @@ Visualization Manager:
                             {}
                           tool0:
                             gripper_body:
-                              camera_mount:
+                              camera_bottom_screw_frame:
                                 camera_link:
-                                  camera_aligned_depth_to_color_frame:
-                                    {}
-                                  camera_aligned_depth_to_infra1_frame:
-                                    camera_infra1_optical_frame:
-                                      {}
                                   camera_depth_frame:
                                     camera_color_frame:
                                       camera_color_optical_frame:
-                                        marker_0:
-                                          {}
-                                        marker_1:
-                                          {}
-                                        marker_6:
-                                          {}
-                                        marker_7:
-                                          {}
+                                        {}
                                     camera_depth_optical_frame:
                                       {}
                                     camera_left_ir_frame:
@@ -331,21 +299,16 @@ Visualization Manager:
                                     camera_right_ir_frame:
                                       camera_right_ir_optical_frame:
                                         {}
-                                  camera_infra1_frame:
-                                    {}
-                                  camera_infra2_frame:
-                                    camera_infra2_optical_frame:
-                                      {}
-                              gripper_hinge_1L:
-                                {}
-                              gripper_hinge_1R:
-                                {}
-                              gripper_motorL:
-                                gripper_hinge_2L:
+                              g1:
+                                ee1:
                                   {}
-                              gripper_motorR:
-                                gripper_hinge_2R:
+                              g1_2:
+                                {}
+                              g2:
+                                ee2:
                                   {}
+                              g2_2:
+                                {}
       Update Interval: 0
       Value: true
     - Class: rviz/Camera
@@ -389,25 +352,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.5
+      Distance: 2.38061523
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.211476699
+        Y: -0.19123961
+        Z: 0.0577825047
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.56979632
+      Pitch: 0.394797087
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0
+      Yaw: 0.734999657
     Saved: ~
 Window Geometry:
   Camera:

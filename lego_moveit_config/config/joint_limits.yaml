@@ -17,6 +17,11 @@ joint_limits:
     max_velocity: 3.15
     has_acceleration_limits: false
     max_acceleration: 0
+  g_j1:
+    has_velocity_limits: false
+    max_velocity: 0
+    has_acceleration_limits: false
+    max_acceleration: 0
   g_j2:
     has_velocity_limits: false
     max_velocity: 0
@@ -28,11 +33,6 @@ joint_limits:
     has_acceleration_limits: false
     max_acceleration: 0
   gj2_2:
-    has_velocity_limits: false
-    max_velocity: 0
-    has_acceleration_limits: false
-    max_acceleration: 0
-  gripper_motor:
     has_velocity_limits: false
     max_velocity: 0
     has_acceleration_limits: false

@@ -6,6 +6,6 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/ur5.srdf
   CONFIG:
-    author_name: rob5_aau
-    author_email: 19gr560@es.aau.dk
-    generated_timestamp: 1574254423
+    author_name: rob5Group
+    author_email: ptorri17@student.aau.dk
+    generated_timestamp: 1574685288

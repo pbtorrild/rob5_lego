@@ -2,204 +2,205 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro"
        name="ur5" >
        <link name="gripper_body">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-1.88376289019382E-05 -0.0572691280568494 0.000504887247931768"/>
-         <mass value="0.199035857370963"/>
-         <inertia ixx="0.000170600248408318" ixy="-4.71577864277236E-08" ixz="3.75673224283344E-08" iyy="5.5987862820649E-05" iyz="1.76513901962643E-07" izz="0.000213152093472156"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_body.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_body.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <link name="gripper_motorR">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.0063197280431547 0.0103004083490419 0.00360140765722455"/>
-         <mass value="0.015759717931003"/>
-         <inertia ixx="2.47616212313017E-06" ixy="2.90618882642899E-14" ixz="1.64491749587482E-06" iyy="4.86543760300804E-06" iyz="-3.93578859232517E-14" izz="3.61621281643901E-06"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_motorR.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_motorR.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="gripper_motor" type="continuous">
-       <origin rpy="1.5708 0 0.90494" xyz="-0.017 -0.105 -0.0098"/>
-       <parent link="gripper_body"/>
-       <child link="gripper_motorR"/>
-       <axis xyz="0 1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-     </joint>
-     <link name="gripper_hinge_2R">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.0106594479704654 5.00001608941536E-05 0.0272764419969951"/>
-         <mass value="0.00872847802663622"/>
-         <inertia ixx="1.5088629969129E-06" ixy="4.31989587253649E-15" ixz="2.60233685843372E-07" iyy="1.45214573206525E-06" iyz="-4.52554023545439E-15" izz="3.57695333806029E-07"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_2R.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_2R.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="ee_j1" type="continuous">
-       <origin rpy="0 0.90494 -3.1416" xyz="-0.044458 0.01035 0.03238"/>
-       <parent link="gripper_motorR"/>
-       <child link="gripper_hinge_2R"/>
-       <axis xyz="0 -1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-       <mimic joint="gripper_motor" multiplier="-1" offset="0"/>
-     </joint>
-     <link name="gripper_motorL">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.00429646955741927 -0.0102995916509581 0.00586936529746793"/>
-         <mass value="0.0157597179310031"/>
-         <inertia ixx="3.89344206002214E-06" ixy="1.04427595831286E-14" ixz="1.52080311789035E-06" iyy="4.86543760300805E-06" iyz="-4.77973362974997E-14" izz="2.19893287954705E-06"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_motorL.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_motorL.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="g_j2" type="continuous">
-       <origin rpy="-1.5708 0 2.6576" xyz="0.017 -0.105 -0.0098"/>
-       <parent link="gripper_body"/>
-       <child link="gripper_motorL"/>
-       <axis xyz="0 1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-       <mimic joint="gripper_motor" multiplier="1" offset="0"/>
-     </joint>
-     <link name="gripper_hinge_2L">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.0106594479704637 5.00001608941397E-05 0.0272764419969947"/>
-         <mass value="0.00872847802663621"/>
-         <inertia ixx="1.50886299691289E-06" ixy="4.31989593282154E-15" ixz="2.60233685843367E-07" iyy="1.45214573206525E-06" iyz="-4.52554018227509E-15" izz="3.57695333806026E-07"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_2L.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_2L.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="ee_j2" type="continuous">
-       <origin rpy="0 0.484 3.1416" xyz="-0.027346 -0.01025 0.04772"/>
-       <parent link="gripper_motorL"/>
-       <child link="gripper_hinge_2L"/>
-       <axis xyz="0 -1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-       <mimic joint="g_j2" multiplier="-1" offset="0"/>
-     </joint>
-     <link name="gripper_hinge_1R">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.00950728934371683 0.0150013094690604 0.0180574154654823"/>
-         <mass value="0.00491743472868602"/>
-         <inertia ixx="1.60807587211007E-06" ixy="6.85565754222749E-15" ixz="7.14830640826986E-07" iyy="1.77599193494905E-06" iyz="2.26072457117331E-14" izz="6.22075525753842E-07"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_1R.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_1R.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="gj1_2" type="continuous">
-       <origin rpy="1.5708 0 0.44773" xyz="-0.0075 -0.1215 -0.0145"/>
-       <parent link="gripper_body"/>
-       <child link="gripper_hinge_1R"/>
-       <axis xyz="0 1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-       <mimic joint="gripper_motor" multiplier="1" offset="0"/>
-     </joint>
-     <link name="gripper_hinge_1L">
-       <inertial>
-         <origin rpy="0 0 0" xyz="-0.00950728934371742 -0.0149986905309396 0.0180574154654822"/>
-         <mass value="0.00491743472868603"/>
-         <inertia ixx="1.60807587211007E-06" ixy="6.85565789246971E-15" ixz="7.14830640826984E-07" iyy="1.77599193494905E-06" iyz="2.26072452842659E-14" izz="6.22075525753841E-07"/>
-       </inertial>
-       <visual>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_1L.STL"/>
-         </geometry>
-         <material name="">
-           <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
-         </material>
-       </visual>
-       <collision>
-         <origin rpy="0 0 0" xyz="0 0 0"/>
-         <geometry>
-           <mesh filename="package://lego_robot_description/meshes/gripper/gripper_hinge_1L.STL"/>
-         </geometry>
-       </collision>
-     </link>
-     <joint name="gj2_2" type="continuous">
-       <origin rpy="-1.5708 0 2.6939" xyz="0.0075 -0.1215 -0.0145"/>
-       <parent link="gripper_body"/>
-       <child link="gripper_hinge_1L"/>
-       <axis xyz="0 1 0"/>
-       <limit effort="0" lower="0" upper="0" velocity="0"/>
-       <mimic joint="g_j2" multiplier="1" offset="0"/>
-     </joint>
+  <inertial>
+    <origin rpy="0 0 0" xyz="-1.82250287535657E-05 -0.0591650415056614 0.00137128180078305"/>
+    <mass value="0.205726093781245"/>
+    <inertia ixx="0.000170941786821792" ixy="-4.71574912079983E-08" ixz="3.75673245332154E-08" iyy="5.67352219119636E-05" iyz="1.81174895425278E-07" izz="0.000213838979061438"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/gripper_body.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/gripper_body.STL"/>
+    </geometry>
+  </collision>
+</link>
+<link name="g1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.0063197280431547 0.0103004083490419 0.00360140765722455"/>
+    <mass value="0.015759717931003"/>
+    <inertia ixx="2.47616212313017E-06" ixy="2.90618882890915E-14" ixz="1.64491749587482E-06" iyy="4.86543760300804E-06" iyz="-3.93578859415568E-14" izz="3.61621281643901E-06"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g1.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g1.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="g_j1" type="continuous">
+  <origin rpy="1.5708 0 0.90494" xyz="-0.017 -0.105 -0.0098"/>
+  <parent link="gripper_body"/>
+  <child link="g1"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+</joint>
+<link name="ee1">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.0106594479704654 5.00001608941536E-05 0.0272764419969951"/>
+    <mass value="0.00872847802663621"/>
+    <inertia ixx="1.50886299691289E-06" ixy="4.31989592121943E-15" ixz="2.60233685843371E-07" iyy="1.45214573206525E-06" iyz="-4.52554031077008E-15" izz="3.57695333806028E-07"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/ee1.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/ee1.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="ee_j1" type="continuous">
+  <origin rpy="0 0.90494 -3.1416" xyz="-0.044458 0.01035 0.03238"/>
+  <parent link="g1"/>
+  <child link="ee1"/>
+  <axis xyz="0 -1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+  <mimic joint="g_j1" multiplier="-1" offset="0"/>
+</joint>
+<link name="g2">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.00429646955741929 -0.0102995916509581 0.00586936529746795"/>
+    <mass value="0.0157597179310031"/>
+    <inertia ixx="3.89344206002214E-06" ixy="1.04427595826768E-14" ixz="1.52080311789035E-06" iyy="4.86543760300805E-06" iyz="-4.77973362945922E-14" izz="2.19893287954705E-06"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g2.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g2.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="g_j2" type="continuous">
+  <origin rpy="-1.5708 0 2.6576" xyz="0.017 -0.105 -0.0098"/>
+  <parent link="gripper_body"/>
+  <child link="g2"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+  <mimic joint="g_j1" multiplier="1" offset="0"/>
+</joint>
+<link name="ee2">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.0106594479704637 5.00001608941536E-05 0.0272764419969947"/>
+    <mass value="0.00872847802663621"/>
+    <inertia ixx="1.50886299691289E-06" ixy="4.31989594212253E-15" ixz="2.60233685843367E-07" iyy="1.45214573206525E-06" iyz="-4.52554014869126E-15" izz="3.57695333806026E-07"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/ee2.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/ee2.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="ee_j2" type="continuous">
+  <origin rpy="0 0.484 3.1416" xyz="-0.027346 -0.01025 0.04772"/>
+  <parent link="g2"/>
+  <child link="ee2"/>
+  <axis xyz="0 -1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+  <mimic joint="g_j2" multiplier="-1" offset="0"/>
+</joint>
+<link name="g1_2">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.00950728934371682 0.0150013094690604 0.0180574154654823"/>
+    <mass value="0.00491743472868602"/>
+    <inertia ixx="1.60807587211007E-06" ixy="6.85565753879839E-15" ixz="7.14830640826985E-07" iyy="1.77599193494905E-06" iyz="2.26072457190229E-14" izz="6.22075525753842E-07"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g1_2.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g1_2.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="gj1_2" type="continuous">
+  <origin rpy="1.5708 0 0.44773" xyz="-0.0075 -0.1215 -0.0145"/>
+  <parent link="gripper_body"/>
+  <child link="g1_2"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+  <mimic joint="g_j1" multiplier="1" offset="0"/>
+</joint>
+<link name="g2_2">
+  <inertial>
+    <origin rpy="0 0 0" xyz="-0.00950728934371743 -0.0149986905309396 0.0180574154654822"/>
+    <mass value="0.00491743472868603"/>
+    <inertia ixx="1.60807587211007E-06" ixy="6.85565787112456E-15" ixz="7.14830640826984E-07" iyy="1.77599193494905E-06" iyz="2.2607245325676E-14" izz="6.2207552575384E-07"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g2_2.STL"/>
+    </geometry>
+    <material name="">
+      <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    </material>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://lego_robot_description/meshes/gripper/g2_2.STL"/>
+    </geometry>
+  </collision>
+</link>
+<joint name="gj2_2" type="continuous">
+  <origin rpy="-1.5708 0 2.6939" xyz="0.0075 -0.1215 -0.0145"/>
+  <parent link="gripper_body"/>
+  <child link="g2_2"/>
+  <axis xyz="0 1 0"/>
+  <limit effort="0" lower="0" upper="0" velocity="0"/>
+  <mimic joint="g_j2" multiplier="1" offset="0"/>
+</joint>
+
    </robot>
