@@ -20,6 +20,7 @@
  <exec_depend>lego_moveit_config</exec_depend>
  <exec_depend>lego_robot_description</exec_depend>
  <exec_depend>zero_point_cal</exec_depend>
+ <exec_depend>lego_commander</exec_depend>
   <export>
     <metapackage />
   </export>
