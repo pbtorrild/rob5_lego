@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
   moveit::planning_interface::MoveGroupInterface move_group("manipulator");
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-  moveit::planning_interface::PlanningSceneInterface setEndEffectorLink("ee_link");
+  moveit::planning_interface::PlanningSceneInterface setEndEffectorLink("ee_link"); //NOtE: THIS CAN BE ANY FRAME ON THE ENDEFFECTOR
   move_group.setPoseReferenceFrame("world");
   move_group.startStateMonitor();
   /*Seach for markers */
