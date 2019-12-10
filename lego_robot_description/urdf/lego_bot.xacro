@@ -41,7 +41,14 @@
   <joint name="end_effector" type="fixed">
     <parent link="ee_link" />
     <child link = "gripper_body" />
-    <origin xyz="0.0 0.0 0.0" rpy="0.0 -1.57079632679 1.57079632679" />
+    <origin xyz="0.06 0.0 0.0" rpy="0.0 -1.57079632679 1.57079632679" />
+  </joint>
+
+  <link name="TCP"/>
+  <joint name="set_tcp" type="fixed">
+    <parent link="gripper_body" />
+    <child link = "TCP" />
+    <origin xyz="0.0 -0.26 0.0" rpy="0.0 3.14159265359 3.14159265359" />
   </joint>
 
   <!-- Realsense Cam -->

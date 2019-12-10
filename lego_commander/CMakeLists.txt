@@ -16,6 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  image_transport
+  cv_bridge
 )
 
 ## System dependencies are found with CMake's conventions
@@ -119,6 +121,8 @@ catkin_package(
     roscpp
     rospy
     std_msgs
+    image_transport
+    cv_bridge
   DEPENDS system_lib
 )
 
@@ -134,10 +138,16 @@ include_directories(
 )
 
 add_executable(         contol          src/contol.cpp)
+add_executable(         tf_sub          src/tf_sub.cpp)
+add_executable(         test_this     src/test_this.cpp)
 
 add_dependencies(       contol          ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(       tf_sub          ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(       test_this     ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(  contol          ${catkin_LIBRARIES})
+target_link_libraries(  tf_sub          ${catkin_LIBRARIES})
+target_link_libraries(  test_this     ${catkin_LIBRARIES})
 
 #############
 ## Install ##
