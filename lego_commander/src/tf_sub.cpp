@@ -66,12 +66,12 @@ public:
      frame_id.erase(0,7);
      int id_num = std::stoi(frame_id);
      //ser avg translation
-     avg[id_num][0].x += msg.transform.translation.x;
-     avg[id_num][0].y += msg.transform.translation.y;
-     avg[id_num][0].z += msg.transform.translation.z;
+     avg[id_num][0].x += frame.transform.translation.x;
+     avg[id_num][0].y += frame.transform.translation.y;
+     avg[id_num][0].z += frame.transform.translation.z;
      //set avg rotation
      double rx, ry, rz;
-     tf2::Quaternion q(msg.transform.rotation.x,msg.transform.rotation.y,msg.transform.rotation.z,msg.transform.rotation.w);
+     tf2::Quaternion q(frame.transform.rotation.x,frame.transform.rotation.y,frame.transform.rotation.z,frame.transform.rotation.w);
      tf2::Matrix3x3 matrix(q);
 
      matrix.getRPY(rz,ry,rx);

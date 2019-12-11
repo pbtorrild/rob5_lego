@@ -12,35 +12,48 @@
     <group name="manipulator">
         <chain base_link="base_link" tip_link="ee_link" />
     </group>
-    <group name="end_effector">
-        <joint name="ee_fixed_joint" />
-        <joint name="end_effector" />
-        <joint name="camera_joint" />
-        <joint name="camera_link_joint" />
-        <joint name="camera_depth_joint" />
-        <joint name="camera_color_joint" />
-        <joint name="camera_color_optical_joint" />
-        <joint name="camera_depth_optical_joint" />
-        <joint name="camera_left_ir_joint" />
-        <joint name="camera_left_ir_optical_joint" />
-        <joint name="camera_right_ir_joint" />
-        <joint name="camera_right_ir_optical_joint" />
-        <joint name="g_j1" />
-        <joint name="ee_j1" />
-        <joint name="g_j2" />
-        <joint name="ee_j2" />
-        <joint name="gj1_2" />
-        <joint name="gj2_2" />
+    <group name="endeffector">
+        <link name="ee_link" />
+        <link name="gripper_body" />
+        <link name="camera_bottom_screw_frame" />
+        <link name="camera_link" />
+        <link name="camera_depth_frame" />
+        <link name="camera_color_frame" />
+        <link name="camera_color_optical_frame" />
+        <link name="camera_depth_optical_frame" />
+        <link name="camera_left_ir_frame" />
+        <link name="camera_left_ir_optical_frame" />
+        <link name="camera_right_ir_frame" />
+        <link name="camera_right_ir_optical_frame" />
+        <link name="g1" />
+        <link name="ee1" />
+        <link name="g2" />
+        <link name="ee2" />
+        <link name="g1_2" />
+        <link name="g2_2" />
+        <link name="TCP" />
     </group>
-    <group name="other">
-        <joint name="world_joint" />
-        <joint name="table_mount_robot" />
-    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="home" group="manipulator">
+        <joint name="elbow_joint" value="1.5707" />
+        <joint name="shoulder_lift_joint" value="-1.5707" />
+        <joint name="shoulder_pan_joint" value="0" />
+        <joint name="wrist_1_joint" value="0" />
+        <joint name="wrist_2_joint" value="0" />
+        <joint name="wrist_3_joint" value="0" />
+    </group_state>
+    <group_state name="up" group="manipulator">
+        <joint name="elbow_joint" value="0" />
+        <joint name="shoulder_lift_joint" value="-1.5707" />
+        <joint name="shoulder_pan_joint" value="0" />
+        <joint name="wrist_1_joint" value="-1.5707" />
+        <joint name="wrist_2_joint" value="0" />
+        <joint name="wrist_3_joint" value="0" />
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="moveit_ee" parent_link="ee_link" group="end_effector" parent_group="manipulator" />
+    <end_effector name="moveit_ee" parent_link="ee_link" group="endeffector" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="fixed_joint" type="fixed" parent_frame="base_link" child_link="world" />
-    <virtual_joint name="fix_ee" type="fixed" parent_frame="gripper_body" child_link="ee_link" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="g_j1" />
     <passive_joint name="ee_j1" />
@@ -102,7 +115,7 @@
     <disable_collisions link1="g2_2" link2="wrist_3_link" reason="Never" />
     <disable_collisions link1="gripper_body" link2="wrist_1_link" reason="Never" />
     <disable_collisions link1="gripper_body" link2="wrist_2_link" reason="Never" />
-    <disable_collisions link1="gripper_body" link2="wrist_3_link" reason="Default" />
+    <disable_collisions link1="gripper_body" link2="wrist_3_link" reason="Never" />
     <disable_collisions link1="shoulder_link" link2="table" reason="Never" />
     <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent" />
     <disable_collisions link1="wrist_1_link" link2="wrist_2_link" reason="Adjacent" />

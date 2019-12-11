@@ -110,8 +110,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES lego_commander
+  #INCLUDE_DIRS include
+  #LIBRARIES lego_commander
   CATKIN_DEPENDS
     moveit_core
     moveit_ros_planning
@@ -123,7 +123,7 @@ catkin_package(
     std_msgs
     image_transport
     cv_bridge
-  DEPENDS system_lib
+  #DEPENDS system_lib
 )
 
 ###########
