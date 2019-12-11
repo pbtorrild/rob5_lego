@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
   ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 1, &tf_tracker::tracker,&instance);
 
   //To get and avg transform in regards to world
-  //instance.geometry_msgs::Transform Goal = avg_pos[marker_id];
+  //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
 
 
 
