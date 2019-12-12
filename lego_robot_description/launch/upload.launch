@@ -1,6 +1,7 @@
+
 <launch>
-  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
-
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find lego_robot_description)/urdf/lego_bot.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
-
+<arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints."/>
+<arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+<arg name="kinematics_config" default="$(find ur_description)/config/ur5_default.yaml"/>
+<param name="robot_description" command="$(find xacro)/xacro --inorder '$(find lego_robot_description)/urdf/lego_bot.xacro' transmission_hw_interface:=$(arg transmission_hw_interface)" />
 </launch>
