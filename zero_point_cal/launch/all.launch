@@ -3,6 +3,6 @@
   <include file="$(find zero_point_cal)/launch/cam.launch"/>
 
   <!-- the self made files -->
-  <node pkg="zero_point_cal" type="marker_detection" name="marker_detection" output="screen"></node>
+  <node pkg="zero_point_cal" type="test_things" name="test_things" output="screen"></node>
 
 </launch>

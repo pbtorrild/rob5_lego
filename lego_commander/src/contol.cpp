@@ -40,8 +40,8 @@ private:
 protected:
   std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
 public:
-  bool marker_found =false;
-
+  std::vector<bool> marker_found =decltype(marker_found)(num_markers);
+  bool num_markers_found;
   tf_tracker():
   tf2_(buffer_),  target_frame_("world")
   {
@@ -110,7 +110,11 @@ public:
        avg_pos[id_num].rotation.y = Q.y();
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
-       marker_found=true;
+       if (marker_found[id_num]!=true) {
+         num_markers_found +=1;
+       }
+       marker_found[id_num]=true;
+
        //Reset all
        counter[id_num]=0;
        avg[id_num][0].x=0;
@@ -149,7 +153,7 @@ int main(int argc, char **argv) {
   std::vector<double> joint_group_positions =decltype(joint_group_positions)(6);
   moveit::planning_interface::MoveGroupInterface::Plan search;
 
-  while (instance.marker_found==false && ros::ok()) {
+  while (instance.marker_found[0]==false && ros::ok()) {
 
     joint_group_positions[0] = 0.001;
     joint_group_positions[1] = -M_PI/2;

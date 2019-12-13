@@ -90,7 +90,7 @@ public:
         float rz = rvecs[i][2];
         //write as Quaternion
         tf2::Quaternion q;
-        q.setRPY(rz,ry,rx);
+        q.setRPY(rx,ry,ry);
         frame.transform.rotation.x = q.x();
         frame.transform.rotation.y = q.y();
         frame.transform.rotation.z = q.z();
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 
   //Setup publisher and subscriber
 
-  ros::Subscriber sub = instance.nh.subscribe("/camera/color/image_raw/compressed", 1, &markers::imageCallback,&instance);
+  ros::Subscriber sub = instance.nh.subscribe("/camera/color/image_raw/compressed", 30, &markers::imageCallback,&instance);
   ros::ServiceServer service = instance.nh.advertiseService("get_marker", &markers::service_get_marker,&instance);
 
   ros::spin();
