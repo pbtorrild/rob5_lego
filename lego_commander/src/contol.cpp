@@ -51,6 +51,7 @@ public:
   ros::NodeHandle nh;
 
   std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
+
   void broadcast_frame(geometry_msgs::Transform transform, int id_num) {
     std::string str = std::to_string(id_num);
     std::string frame_id = "world_marker_"+str;
