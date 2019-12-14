@@ -63,7 +63,7 @@ public:
     transformStamped.child_frame_id = frame_id;
     transformStamped.transform=transform;
     br.sendTransform(transformStamped);
-    ROS_INFO("Droadcastering was a SUCCES");
+    ROS_INFO("Broadcastering was a SUCCES");
   }
 
   void tracker(geometry_msgs::TransformStamped msg){
@@ -88,7 +88,7 @@ public:
      std::string frame_id =msg.child_frame_id;
      frame_id.erase(0,7);
      int id_num = std::stoi(frame_id);
-     //ser avg translation
+     //set avg translation
      avg[id_num][0].x += frame.transform.translation.x;
      avg[id_num][0].y += frame.transform.translation.y;
      avg[id_num][0].z += frame.transform.translation.z;
