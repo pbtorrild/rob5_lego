@@ -62,19 +62,21 @@ public:
     transformStamped.child_frame_id = frame_id;
     transformStamped.transform=transform;
     br.sendTransform(transformStamped);
+    ROS_INFO("Droadcastering was a SUCCES");
   }
 
   void tracker(geometry_msgs::TransformStamped msg){
     //Find frame in regard to world
 
-    geometry_msgs::TransformStamped frame,cam;
-    tf2::Stamped<tf2::Transform> marker_tf,cam_tf;
+    geometry_msgs::TransformStamped frame;
     bool transform_succes;
     ros::Time stamp = msg.header.stamp;
     //wait to make sure pose is in the buffer
-    ros::Duration(0.10).sleep();
+    ros::Duration(0.20).sleep();
     try{
        frame = buffer_.lookupTransform( "world",msg.child_frame_id,stamp);
+       ROS_INFO("Looked Up Transformation was a SUCCES");
+       transform_succes=true;
     }
     catch (tf2::TransformException &ex) {
           ROS_WARN("%s",ex.what());
@@ -100,7 +102,7 @@ public:
      avg[id_num][1].y += ry;
      avg[id_num][1].z += rz;
      counter[id_num] += 1;
-
+     ROS_INFO("Added to average was a SUCCES");
      if (counter[id_num]==seen) {
 
 
@@ -126,6 +128,7 @@ public:
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
        broadcast_frame(avg_pos[id_num],id_num);
+       ROS_INFO("Send to broadcaster was a SUCCES");
        if (marker_found[id_num]!=true) {
          num_markers_found +=1;
        }
@@ -154,7 +157,7 @@ int main(int argc, char **argv) {
   //Define class intace
   tf_tracker instance;
 
-  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 10, &tf_tracker::tracker,&instance);
+  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 30, &tf_tracker::tracker,&instance);
 
   ros::AsyncSpinner spinner(1);
   spinner.start();

@@ -26,10 +26,6 @@ private:
   int num_markers=14;
   int marker_bits_size=4; //X by X bits
   cv::Ptr<cv::aruco::Dictionary> dictionary= cv::aruco::generateCustomDictionary(num_markers, marker_bits_size);
-  float x_avg,rx_avg;
-  float y_avg,ry_avg;
-  float z_avg,rz_avg;
-  int seen =30;
 
 
 protected:
@@ -90,7 +86,7 @@ public:
         float rz = rvecs[i][2];
         //write as Quaternion
         tf2::Quaternion q;
-        q.setRPY(rx,ry,ry);
+        q.setRPY(rx,ry,rz);
         frame.transform.rotation.x = q.x();
         frame.transform.rotation.y = q.y();
         frame.transform.rotation.z = q.z();
