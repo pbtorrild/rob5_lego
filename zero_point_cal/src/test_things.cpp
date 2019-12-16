@@ -3,6 +3,7 @@
 
 #include <sensor_msgs/image_encodings.h>
 #include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include "tf2_ros/transform_listener.h"
 #include <geometry_msgs/TransformStamped.h>
@@ -10,6 +11,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/aruco.hpp>
+#include <opencv2/calib3d.hpp>
 #include <opencv2/aruco/dictionary.hpp>
 
 #include <cv_bridge/cv_bridge.h>
@@ -26,7 +28,7 @@ private:
   int num_markers=14;
   int marker_bits_size=4; //X by X bits
   cv::Ptr<cv::aruco::Dictionary> dictionary= cv::aruco::generateCustomDictionary(num_markers, marker_bits_size);
-
+  cv::Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
 
 protected:
 
@@ -60,7 +62,8 @@ public:
     image.copyTo(imageCopy);
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f> > corners;
-    cv::aruco::detectMarkers(imageCopy, dictionary, corners, ids);
+    detectorParams->cornerRefinementMethod = cv::aruco::CORNER_REFINE_SUBPIX;
+    cv::aruco::detectMarkers(imageCopy, dictionary, corners, ids,detectorParams);
     // if at least one marker detected
     std::vector<cv::Vec3d> rvecs, tvecs;
 
@@ -81,16 +84,21 @@ public:
         frame.transform.translation.y = tvecs[i][1];
         frame.transform.translation.z = tvecs[i][2];
         //find RPY
-        float rx = rvecs[i][0];
-        float ry = rvecs[i][1];
-        float rz = rvecs[i][2];
+        cv::Mat R_mat;
+        cv::Rodrigues(rvecs[i],R_mat);
+        tf2::Matrix3x3 r_Mat(R_mat.at<float>(0,0),R_mat.at<float>(0,1),R_mat.at<float>(0,2),
+                        R_mat.at<float>(1,0),R_mat.at<float>(1,1),R_mat.at<float>(1,2),
+                        R_mat.at<float>(2,0),R_mat.at<float>(2,1),R_mat.at<float>(2,2));
         //write as Quaternion
         tf2::Quaternion q;
-        q.setRPY(rx,ry,rz);
+        tf2::getRotation();
         frame.transform.rotation.x = q.x();
         frame.transform.rotation.y = q.y();
         frame.transform.rotation.z = q.z();
         frame.transform.rotation.w = q.w();
+        if(ids[i]==0){
+        ROS_INFO("[%f,%f,%f,%f] ",frame.transform.rotation.x,frame.transform.rotation.y,frame.transform.rotation.z,frame.transform.rotation.w);
+        }
         broadcast_frame(frame);
       }
     }

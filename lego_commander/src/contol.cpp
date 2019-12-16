@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
   std::vector<double> joint_group_positions =decltype(joint_group_positions)(6);
   moveit::planning_interface::MoveGroupInterface::Plan search;
   do {
-    joint_group_positions[0] = M_PI;
+    joint_group_positions[0] = 0.01;
     joint_group_positions[1] = -M_PI/2;
     joint_group_positions[2] = -M_PI/2;
     joint_group_positions[3] = -M_PI/4;
@@ -182,15 +182,17 @@ int main(int argc, char **argv) {
     move_group.setJointValueTarget(joint_group_positions);
     move_group.plan(search);
     move_group.move();
-    //joint_group_positions[0] = 2*M_PI-0.001;
-    //move_group.setJointValueTarget(joint_group_positions);
-    //move_group.plan(search);
-    //move_group.move();
-  } while(instance.marker_found[0]==false && ros::ok());
+    /*
+    joint_group_positions[0] = 2*M_PI-0.001;
+    move_group.setJointValueTarget(joint_group_positions);
+    move_group.plan(search);
+    move_group.move();*/
+  } while( ros::ok());
 
+  //instance.marker_found[0]==false &&
   //HOW TO ACCES TF DATA FOR THE MARKE IR2 WORLD
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
-    //move_group.setGoalOrientationTolerance(1);
+    move_group.setGoalOrientationTolerance(1);
     moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
 
     geometry_msgs::Pose target_pose;
