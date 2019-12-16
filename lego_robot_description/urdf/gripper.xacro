@@ -45,7 +45,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="g_j1" type="continuous">
+<joint name="g_j1" type="fixed">
   <origin rpy="1.5708 0 0.90494" xyz="-0.017 -0.105 -0.0098"/>
   <parent link="gripper_body"/>
   <child link="g1"/>
@@ -74,7 +74,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="ee_j1" type="continuous">
+<joint name="ee_j1" type="fixed">
   <origin rpy="0 0.90494 -3.1416" xyz="-0.044458 0.01035 0.03238"/>
   <parent link="g1"/>
   <child link="ee1"/>
@@ -104,7 +104,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="g_j2" type="continuous">
+<joint name="g_j2" type="fixed">
   <origin rpy="-1.5708 0 2.6576" xyz="0.017 -0.105 -0.0098"/>
   <parent link="gripper_body"/>
   <child link="g2"/>
@@ -134,7 +134,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="ee_j2" type="continuous">
+<joint name="ee_j2" type="fixed">
   <origin rpy="0 0.484 3.1416" xyz="-0.027346 -0.01025 0.04772"/>
   <parent link="g2"/>
   <child link="ee2"/>
@@ -164,7 +164,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="gj1_2" type="continuous">
+<joint name="gj1_2" type="fixed">
   <origin rpy="1.5708 0 0.44773" xyz="-0.0075 -0.1215 -0.0145"/>
   <parent link="gripper_body"/>
   <child link="g1_2"/>
@@ -194,7 +194,7 @@
     </geometry>
   </collision>
 </link>
-<joint name="gj2_2" type="continuous">
+<joint name="gj2_2" type="fixed">
   <origin rpy="-1.5708 0 2.6939" xyz="0.0075 -0.1215 -0.0145"/>
   <parent link="gripper_body"/>
   <child link="g2_2"/>

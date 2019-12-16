@@ -190,21 +190,24 @@ int main(int argc, char **argv) {
 
   //HOW TO ACCES TF DATA FOR THE MARKE IR2 WORLD
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
-    move_group.setGoalOrientationTolerance(1);
+    //move_group.setGoalOrientationTolerance(1);
     moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
 
     geometry_msgs::Pose target_pose;
     tf2::Quaternion q;
-    target_pose.position.x = instance.avg_pos[0].translation.x;
-    target_pose.position.y = instance.avg_pos[0].translation.y;
-    target_pose.position.z = instance.avg_pos[0].translation.z;
-    target_pose.orientation.x=instance.avg_pos[0].rotation.x;
-    target_pose.orientation.y=instance.avg_pos[0].rotation.y;
-    target_pose.orientation.z=instance.avg_pos[0].rotation.z;
-    target_pose.orientation.w=instance.avg_pos[0].rotation.w;
-    move_group.setPoseTarget(target_pose,"TCP");
-    move_group.plan(go_to_marker);
-    move_group.move();
+    do {
+      target_pose.position.x = instance.avg_pos[0].translation.x;
+      target_pose.position.y = instance.avg_pos[0].translation.y;
+      target_pose.position.z = instance.avg_pos[0].translation.z;
+      target_pose.orientation.x=instance.avg_pos[0].rotation.x;
+      target_pose.orientation.y=instance.avg_pos[0].rotation.y;
+      target_pose.orientation.z=instance.avg_pos[0].rotation.z;
+      target_pose.orientation.w=instance.avg_pos[0].rotation.w;
+      move_group.setPoseTarget(target_pose,"TCP");
+      move_group.plan(go_to_marker);
+      move_group.move();
+    } while(ros::ok());
+
 
 
   ros::spin();
