@@ -2,9 +2,11 @@
 #include <ros/ros.h>
 #include <iostream>
 
+#include <moveit/move_group_interface/move_group_interface.h>
+#include <moveit/planning_scene_interface/planning_scene_interface.h>
+
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
 
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
@@ -14,10 +16,11 @@
 #include <tf2_ros/message_filter.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <message_filters/subscriber.h>
-
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Pose.h>
+
+#include <message_filters/subscriber.h>
+
 class tf_tracker{
 private:
   std::string target_frame_;
@@ -35,17 +38,33 @@ private:
   std::vector<int> counter =decltype(counter)(num_markers);
 
 protected:
-  std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
+
 public:
-
-
+  std::vector<bool> marker_found =decltype(marker_found)(num_markers);
+  bool num_markers_found;
   tf_tracker():
-  tf2_(buffer_),  target_frame_("world")
+  tf2_(buffer_),  target_frame_("base_link")
   {
 
   }
 
   ros::NodeHandle nh;
+
+  std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
+
+  void broadcast_frame(geometry_msgs::Transform transform, int id_num) {
+    std::string str = std::to_string(id_num);
+    std::string frame_id = "world_marker_"+str;
+    static tf2_ros::TransformBroadcaster br;
+    geometry_msgs::TransformStamped transformStamped;
+
+    transformStamped.header.stamp = ros::Time::now();
+    transformStamped.header.frame_id = "base_link";
+    transformStamped.child_frame_id = frame_id;
+    transformStamped.transform=transform;
+    br.sendTransform(transformStamped);
+  }
+
   void tracker(geometry_msgs::TransformStamped msg){
     //Find frame in regard to world
 
@@ -53,9 +72,9 @@ public:
     bool transform_succes;
     ros::Time stamp = msg.header.stamp;
     //wait to make sure pose is in the buffer
-    ros::Duration(0.10).sleep();
+    ros::Duration(0.20).sleep();
     try{
-       frame = buffer_.lookupTransform(msg.child_frame_id, "world",stamp);
+       frame = buffer_.lookupTransform( "base_link",msg.child_frame_id,stamp);
        transform_succes=true;
     }
     catch (tf2::TransformException &ex) {
@@ -67,7 +86,7 @@ public:
      std::string frame_id =msg.child_frame_id;
      frame_id.erase(0,7);
      int id_num = std::stoi(frame_id);
-     //ser avg translation
+     //set avg translation
      avg[id_num][0].x += frame.transform.translation.x;
      avg[id_num][0].y += frame.transform.translation.y;
      avg[id_num][0].z += frame.transform.translation.z;
@@ -82,7 +101,6 @@ public:
      avg[id_num][1].y += ry;
      avg[id_num][1].z += rz;
      counter[id_num] += 1;
-
      if (counter[id_num]==seen) {
 
 
@@ -107,7 +125,13 @@ public:
        avg_pos[id_num].rotation.y = Q.y();
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
-       ROS_INFO("DID AN AVG");
+       ROS_INFO("(%f, %f, %f)",avg_pos[id_num].translation.x,avg_pos[id_num].translation.y,avg_pos[id_num].translation.z);
+       broadcast_frame(avg_pos[id_num],id_num);
+       if (marker_found[id_num]!=true) {
+         num_markers_found +=1;
+       }
+       marker_found[id_num]=true;
+
        //Reset all
        counter[id_num]=0;
        avg[id_num][0].x=0;
@@ -123,18 +147,16 @@ public:
 
 
 };
+
 //The most helpfull sheet youll meet today :)
 //http://docs.ros.org/jade/api/moveit_ros_planning_interface/html/classmoveit_1_1planning__interface_1_1MoveGroup.html
 int main(int argc, char **argv) {
-  //Ros init stuff:
-  ros::init(argc, argv, "tf_sub");
+  ros::init(argc, argv, "Commander");
   //Define class intace
   tf_tracker instance;
 
-  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 1, &tf_tracker::tracker,&instance);
+  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 30, &tf_tracker::tracker,&instance);
 
-  //To get and avg transform in regards to world
-  //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
 
 
 

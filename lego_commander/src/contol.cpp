@@ -38,7 +38,7 @@ private:
   std::vector<int> counter =decltype(counter)(num_markers);
 
 protected:
-  std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
+
 public:
   std::vector<bool> marker_found =decltype(marker_found)(num_markers);
   bool num_markers_found;
@@ -49,6 +49,23 @@ public:
   }
 
   ros::NodeHandle nh;
+
+  std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
+
+  void broadcast_frame(geometry_msgs::Transform transform, int id_num) {
+    std::string str = std::to_string(id_num);
+    std::string frame_id = "world_marker_"+str;
+    static tf2_ros::TransformBroadcaster br;
+    geometry_msgs::TransformStamped transformStamped;
+
+    transformStamped.header.stamp = ros::Time::now();
+    transformStamped.header.frame_id = "world";
+    transformStamped.child_frame_id = frame_id;
+    transformStamped.transform=transform;
+    br.sendTransform(transformStamped);
+    ROS_INFO("Broadcastering was a SUCCES");
+  }
+
   void tracker(geometry_msgs::TransformStamped msg){
     //Find frame in regard to world
 
@@ -56,9 +73,10 @@ public:
     bool transform_succes;
     ros::Time stamp = msg.header.stamp;
     //wait to make sure pose is in the buffer
-    ros::Duration(0.10).sleep();
+    ros::Duration(0.20).sleep();
     try{
-       frame = buffer_.lookupTransform(msg.child_frame_id, "world",stamp);
+       frame = buffer_.lookupTransform( "world",msg.child_frame_id,stamp);
+       ROS_INFO("Looked Up Transformation was a SUCCES");
        transform_succes=true;
     }
     catch (tf2::TransformException &ex) {
@@ -70,7 +88,7 @@ public:
      std::string frame_id =msg.child_frame_id;
      frame_id.erase(0,7);
      int id_num = std::stoi(frame_id);
-     //ser avg translation
+     //set avg translation
      avg[id_num][0].x += frame.transform.translation.x;
      avg[id_num][0].y += frame.transform.translation.y;
      avg[id_num][0].z += frame.transform.translation.z;
@@ -85,7 +103,7 @@ public:
      avg[id_num][1].y += ry;
      avg[id_num][1].z += rz;
      counter[id_num] += 1;
-
+     ROS_INFO("Added to average was a SUCCES");
      if (counter[id_num]==seen) {
 
 
@@ -110,6 +128,8 @@ public:
        avg_pos[id_num].rotation.y = Q.y();
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
+       broadcast_frame(avg_pos[id_num],id_num);
+       ROS_INFO("Send to broadcaster was a SUCCES");
        if (marker_found[id_num]!=true) {
          num_markers_found +=1;
        }
@@ -138,24 +158,22 @@ int main(int argc, char **argv) {
   //Define class intace
   tf_tracker instance;
 
-  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 10, &tf_tracker::tracker,&instance);
+  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 30, &tf_tracker::tracker,&instance);
 
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
   moveit::planning_interface::MoveGroupInterface move_group("manipulator");
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-  moveit::planning_interface::PlanningSceneInterface setEndEffectorLink("ee_link"); //NOtE: THIS CAN BE ANY FRAME ON THE ENDEFFECTOR
+  moveit::planning_interface::PlanningSceneInterface setEndEffectorLink("TCP"); //NOtE: THIS CAN BE ANY FRAME ON THE ENDEFFECTOR
   move_group.setPoseReferenceFrame("world");
 
   move_group.startStateMonitor();
   /*Seach for markers */
   std::vector<double> joint_group_positions =decltype(joint_group_positions)(6);
   moveit::planning_interface::MoveGroupInterface::Plan search;
-
-  while (instance.marker_found[0]==false && ros::ok()) {
-
-    joint_group_positions[0] = 0.001;
+  do {
+    joint_group_positions[0] = M_PI;
     joint_group_positions[1] = -M_PI/2;
     joint_group_positions[2] = -M_PI/2;
     joint_group_positions[3] = -M_PI/4;
@@ -164,45 +182,30 @@ int main(int argc, char **argv) {
     move_group.setJointValueTarget(joint_group_positions);
     move_group.plan(search);
     move_group.move();
-    joint_group_positions[0] = 2*M_PI-0.001;
-    move_group.setJointValueTarget(joint_group_positions);
-    move_group.plan(search);
-    move_group.move();
-  }
+    //joint_group_positions[0] = 2*M_PI-0.001;
+    //move_group.setJointValueTarget(joint_group_positions);
+    //move_group.plan(search);
+    //move_group.move();
+  } while(instance.marker_found[0]==false && ros::ok());
+
   //HOW TO ACCES TF DATA FOR THE MARKE IR2 WORLD
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
+    move_group.setGoalOrientationTolerance(1);
+    moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
 
-  while (ros::ok()) {
     geometry_msgs::Pose target_pose;
-    target_pose.position.x = 0.3;
-    target_pose.position.y = -0.3;
-    target_pose.position.z = 0.2;
     tf2::Quaternion q;
-    q.setRPY(-M_PI/2,0,-M_PI/2);
-    target_pose.orientation.x=q.x();
-    target_pose.orientation.y=q.y();
-    target_pose.orientation.z=q.z();
-    target_pose.orientation.w=q.w();
-    move_group.setPoseTarget(target_pose);
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-    move_group.plan(my_plan);
+    target_pose.position.x = instance.avg_pos[0].translation.x;
+    target_pose.position.y = instance.avg_pos[0].translation.y;
+    target_pose.position.z = instance.avg_pos[0].translation.z;
+    target_pose.orientation.x=instance.avg_pos[0].rotation.x;
+    target_pose.orientation.y=instance.avg_pos[0].rotation.y;
+    target_pose.orientation.z=instance.avg_pos[0].rotation.z;
+    target_pose.orientation.w=instance.avg_pos[0].rotation.w;
+    move_group.setPoseTarget(target_pose,"TCP");
+    move_group.plan(go_to_marker);
     move_group.move();
-    sleep(3.0);
-    target_pose.position.x = 0.2;
-    target_pose.position.y = -0.5;
-    target_pose.position.z = 0.4;
 
-    q.setRPY(-M_PI/2, -M_PI,M_PI/4);
-    target_pose.orientation.x=q.x();
-    target_pose.orientation.y=q.y();
-    target_pose.orientation.z=q.z();
-    target_pose.orientation.w=q.w();
-    move_group.setPoseTarget(target_pose);
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan2;
-    move_group.plan(my_plan2);
-    move_group.move();
-    sleep(3.0);
-  }
 
   ros::spin();
 }

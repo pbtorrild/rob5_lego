@@ -41,7 +41,8 @@
   </joint>
 
   <!-- Realsense Cam -->
-  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+  <xacro:arg name="use_nominal_extrinsics" default="False" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro"/>
 
   <sensor_d435 parent="gripper_body">
     <origin xyz="0  -0.1157 0.03799" rpy="0 0 -1.57079632679"/>
