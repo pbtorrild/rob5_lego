@@ -63,7 +63,6 @@ public:
     transformStamped.child_frame_id = frame_id;
     transformStamped.transform=transform;
     br.sendTransform(transformStamped);
-    ROS_INFO("Broadcastering was a SUCCES");
   }
 
   void tracker(geometry_msgs::TransformStamped msg){
@@ -76,7 +75,6 @@ public:
     ros::Duration(0.20).sleep();
     try{
        frame = buffer_.lookupTransform( "world",msg.child_frame_id,stamp);
-       ROS_INFO("Looked Up Transformation was a SUCCES");
        transform_succes=true;
     }
     catch (tf2::TransformException &ex) {
@@ -97,13 +95,12 @@ public:
      tf2::Quaternion q(frame.transform.rotation.x,frame.transform.rotation.y,frame.transform.rotation.z,frame.transform.rotation.w);
      tf2::Matrix3x3 matrix(q);
 
-     matrix.getRPY(rz,ry,rx);
+     matrix.getRPY(rx,ry,rz);
 
      avg[id_num][1].x += rx;
      avg[id_num][1].y += ry;
      avg[id_num][1].z += rz;
      counter[id_num] += 1;
-     ROS_INFO("Added to average was a SUCCES");
      if (counter[id_num]==seen) {
 
 
@@ -129,7 +126,6 @@ public:
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
        broadcast_frame(avg_pos[id_num],id_num);
-       ROS_INFO("Send to broadcaster was a SUCCES");
        if (marker_found[id_num]!=true) {
          num_markers_found +=1;
        }
@@ -193,7 +189,7 @@ int main(int argc, char **argv) {
   //HOW TO ACCES TF DATA FOR THE MARKE IR2 WORLD
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
     moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
-
+    move_group.setGoalOrientationTolerance(0.1);
     geometry_msgs::Pose target_pose;
     tf2::Quaternion q;
     do {
