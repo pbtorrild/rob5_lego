@@ -3,7 +3,7 @@
 
 #include <sensor_msgs/image_encodings.h>
 #include <tf2/LinearMath/Quaternion.h>
-#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2/LinearMath/Vector3.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include "tf2_ros/transform_listener.h"
 #include <geometry_msgs/TransformStamped.h>
@@ -83,22 +83,19 @@ public:
         frame.transform.translation.x = tvecs[i][0];
         frame.transform.translation.y = tvecs[i][1];
         frame.transform.translation.z = tvecs[i][2];
-        //find RPY
-        cv::Mat R_mat;
-        cv::Rodrigues(rvecs[i],R_mat);
-        tf2::Matrix3x3 r_Mat(R_mat.at<float>(0,0),R_mat.at<float>(0,1),R_mat.at<float>(0,2),
-                        R_mat.at<float>(1,0),R_mat.at<float>(1,1),R_mat.at<float>(1,2),
-                        R_mat.at<float>(2,0),R_mat.at<float>(2,1),R_mat.at<float>(2,2));
+        //find Rotation as Quaternion
+        float angle = sqrt((rvecs[i][0]*rvecs[i][0])
+                            +(rvecs[i][1]*rvecs[i][1])
+                            +(rvecs[i][2]*rvecs[i][2]));
+
+        tf2::Vector3 rvec(rvecs[i][0],rvecs[i][1],rvecs[i][2]);
         //write as Quaternion
         tf2::Quaternion q;
-        tf2::getRotation();
+        q.setRotation(rvec,angle);
         frame.transform.rotation.x = q.x();
         frame.transform.rotation.y = q.y();
         frame.transform.rotation.z = q.z();
         frame.transform.rotation.w = q.w();
-        if(ids[i]==0){
-        ROS_INFO("[%f,%f,%f,%f] ",frame.transform.rotation.x,frame.transform.rotation.y,frame.transform.rotation.z,frame.transform.rotation.w);
-        }
         broadcast_frame(frame);
       }
     }
