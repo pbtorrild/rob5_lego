@@ -28,7 +28,7 @@ private:
   tf2_ros::TransformListener tf2_;
 
   //the number of times a maker have to bee seen inorder for the avg to be taken
-  int seen = 6;
+  int seen = 1;
   int num_markers=14;
   //Make a vector to take avg so that:
   //avg[id][0].x = tx
@@ -125,7 +125,10 @@ public:
        avg_pos[id_num].rotation.y = Q.y();
        avg_pos[id_num].rotation.z = Q.z();
        avg_pos[id_num].rotation.w = Q.w();
-       ROS_INFO("(%f, %f, %f)",avg_pos[id_num].translation.x,avg_pos[id_num].translation.y,avg_pos[id_num].translation.z);
+       //ROS_INFO("ID: %d",id_num);
+       ROS_INFO("XYZRPY::%f: %f: %f: %f: %f: %f:",tx_avg,ty_avg,tz_avg,rx_avg,ry_avg,rz_avg);
+       //ROS_INFO("RPY:%f: %f: %f:",rx_avg,ry_avg,rz_avg);
+       //ROS_INFO("-----------------------");
        broadcast_frame(avg_pos[id_num],id_num);
        if (marker_found[id_num]!=true) {
          num_markers_found +=1;

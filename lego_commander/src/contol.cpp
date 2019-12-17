@@ -28,7 +28,7 @@ private:
   tf2_ros::TransformListener tf2_;
 
   //the number of times a maker have to bee seen inorder for the avg to be taken
-  int seen = 2;
+
   int num_markers=14;
   //Make a vector to take avg so that:
   //avg[id][0].x = tx
@@ -47,9 +47,8 @@ public:
   {
 
   }
-
   ros::NodeHandle nh;
-
+  int seen = 1;
   std::vector<geometry_msgs::Transform> avg_pos = decltype(avg_pos)(num_markers);
 
   void broadcast_frame(geometry_msgs::Transform transform, int id_num) {
@@ -130,20 +129,23 @@ public:
          num_markers_found +=1;
        }
        marker_found[id_num]=true;
+       //Reset
+       reset_all(id_num);
 
-       //Reset all
-       counter[id_num]=0;
-       avg[id_num][0].x=0;
-       avg[id_num][0].y=0;
-       avg[id_num][0].z=0;
-       //set avg rotation
-       avg[id_num][1].x=0;
-       avg[id_num][1].y=0;
-       avg[id_num][1].z=0;
      }
    }
 }
-
+  void reset_all(int id_num) {
+    //Reset all
+    counter[id_num]=0;
+    avg[id_num][0].x=0;
+    avg[id_num][0].y=0;
+    avg[id_num][0].z=0;
+    //set avg rotation
+    avg[id_num][1].x=0;
+    avg[id_num][1].y=0;
+    avg[id_num][1].z=0;
+  }
 
 };
 
@@ -154,7 +156,7 @@ int main(int argc, char **argv) {
   //Define class intace
   tf_tracker instance;
 
-  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 30, &tf_tracker::tracker,&instance);
+  ros::Subscriber sub = instance.nh.subscribe("tf/marker_frames", 1, &tf_tracker::tracker,&instance);
 
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -168,41 +170,68 @@ int main(int argc, char **argv) {
   /*Seach for markers */
   std::vector<double> joint_group_positions =decltype(joint_group_positions)(6);
   moveit::planning_interface::MoveGroupInterface::Plan search;
-
+  ROS_INFO("Searching for markers..");
   do {
     joint_group_positions[0] = 0.01;
     joint_group_positions[1] = -M_PI/2;
     joint_group_positions[2] = -M_PI/2;
-    joint_group_positions[3] = -M_PI/4;
+    joint_group_positions[3] = -M_PI/4-M_PI/8;
     joint_group_positions[4] = M_PI/2;
     joint_group_positions[5] = 0;
     move_group.setJointValueTarget(joint_group_positions);
     move_group.plan(search);
     move_group.move();
-    joint_group_positions[0] = 2*M_PI-0.001;
+    joint_group_positions[0] = 2*M_PI-0.01;
     move_group.setJointValueTarget(joint_group_positions);
     move_group.plan(search);
     move_group.move();
   } while(instance.marker_found[0]==false && ros::ok());
-
+    ROS_INFO("Found marker with id: 0");
 
   //HOW TO ACCES TF DATA FOR THE MARKE IR2 WORLD
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
     moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
-    move_group.setGoalOrientationTolerance(0.1);
+    move_group.setGoalOrientationTolerance(0.00001);
+    move_group.setGoalPositionTolerance(0.01 );
     geometry_msgs::Pose target_pose;
     tf2::Quaternion q;
+    //Move close to marker
+    bool success = false;
     do {
       target_pose.position.x = instance.avg_pos[0].translation.x;
       target_pose.position.y = instance.avg_pos[0].translation.y;
-      target_pose.position.z = instance.avg_pos[0].translation.z;
+      target_pose.position.z = instance.avg_pos[0].translation.z+0.20;
       target_pose.orientation.x=instance.avg_pos[0].rotation.x;
       target_pose.orientation.y=instance.avg_pos[0].rotation.y;
       target_pose.orientation.z=instance.avg_pos[0].rotation.z;
       target_pose.orientation.w=instance.avg_pos[0].rotation.w;
       move_group.setPoseTarget(target_pose,"TCP");
+      success = (move_group.plan(go_to_marker) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+      move_group.move();
+    } while(success=false && ros::ok());
+
+
+    move_group.setGoalPositionTolerance(0.00001);
+    //prepare for calibration
+    for (int i = 1; i <= 2; i++) {
+      ROS_INFO("Starting Calibration (Part %d of 2)",i);
+      ros::Duration(2.5).sleep();
+      instance.seen=1200;
+      instance.marker_found[0]==false;
+      instance.reset_all(0);
+
+    }
+    ROS_INFO("Calibrating...");
+    do {
+      ros::Duration(0.01).sleep();
+    } while(instance.marker_found[0]==false && ros::ok());
+
+
+    do {
+      move_group.setPoseTarget(target_pose,"TCP");
       move_group.plan(go_to_marker);
       move_group.move();
+      target_pose.position.z = instance.avg_pos[0].translation.z+0.0492;
     } while(ros::ok());
 
 

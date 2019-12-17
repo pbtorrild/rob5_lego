@@ -69,7 +69,7 @@ public:
 
     std_msgs::Header header=msg->header;
     if (ids.size() > 0){
-      cv::aruco::estimatePoseSingleMarkers(corners, 0.051, cameraMatrix, distCoeffs, rvecs, tvecs);
+      cv::aruco::estimatePoseSingleMarkers(corners, 0.0675, cameraMatrix, distCoeffs, rvecs, tvecs);
 
       for (int i = 0; i < ids.size(); i++) {
         geometry_msgs::TransformStamped frame;

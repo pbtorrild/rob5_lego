@@ -37,7 +37,7 @@
   <joint name="set_tcp" type="fixed">
     <parent link="gripper_body" />
     <child link = "TCP" />
-    <origin xyz="0.0 -0.215 0.0" rpy="3.14159265359 1.57079632679 -1.57079632679" />
+    <origin xyz="0.0 -0.233 -0.01905" rpy="3.14159265359 1.57079632679 -1.57079632679" />
   </joint>
 
   <!-- Realsense Cam -->
