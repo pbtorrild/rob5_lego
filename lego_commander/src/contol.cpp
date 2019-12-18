@@ -192,19 +192,19 @@ int main(int argc, char **argv) {
   //geometry_msgs::Transform Goal = instance.avg_pos[marker_id];
     moveit::planning_interface::MoveGroupInterface::Plan go_to_marker;
     move_group.setGoalOrientationTolerance(0.00001);
-    move_group.setGoalPositionTolerance(0.01 );
+    move_group.setGoalPositionTolerance(0.00001 );
     geometry_msgs::Pose target_pose;
     tf2::Quaternion q;
     //Move close to marker
     bool success = false;
+    target_pose.position.x = instance.avg_pos[0].translation.x;
+    target_pose.position.y = instance.avg_pos[0].translation.y;
+    target_pose.position.z = instance.avg_pos[0].translation.z+0.20;
+    target_pose.orientation.x=instance.avg_pos[0].rotation.x;
+    target_pose.orientation.y=instance.avg_pos[0].rotation.y;
+    target_pose.orientation.z=instance.avg_pos[0].rotation.z;
+    target_pose.orientation.w=instance.avg_pos[0].rotation.w;
     do {
-      target_pose.position.x = instance.avg_pos[0].translation.x;
-      target_pose.position.y = instance.avg_pos[0].translation.y;
-      target_pose.position.z = instance.avg_pos[0].translation.z+0.20;
-      target_pose.orientation.x=instance.avg_pos[0].rotation.x;
-      target_pose.orientation.y=instance.avg_pos[0].rotation.y;
-      target_pose.orientation.z=instance.avg_pos[0].rotation.z;
-      target_pose.orientation.w=instance.avg_pos[0].rotation.w;
       move_group.setPoseTarget(target_pose,"TCP");
       success = (move_group.plan(go_to_marker) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
       move_group.move();
@@ -232,6 +232,7 @@ int main(int argc, char **argv) {
       move_group.plan(go_to_marker);
       move_group.move();
       target_pose.position.z = instance.avg_pos[0].translation.z+0.0492;
+      ROS_INFO("Done");
     } while(ros::ok());
 
 
